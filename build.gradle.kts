@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.allopen") version "1.8.22"
     id("io.quarkus")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
 }
 
 repositories {
@@ -27,9 +28,10 @@ dependencies {
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
     implementation("io.quarkus:quarkus-security-jpa-reactive")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 }
 
-group = "pl.redny"
+group = "pl.redny.mikrus"
 version = "0.1"
 
 java {

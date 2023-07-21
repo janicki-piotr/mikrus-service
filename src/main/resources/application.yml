@@ -1,5 +1,21 @@
-greeting:
-  message: "hello"
 quarkus:
   http:
     port: 8082
+  rest-client:
+    "pl.redny.mikrus.client.MikrusApiClient":
+      url: https://api.mikr.us
+    logging:
+      scope: request-response
+      body-limit: 1024
+  log:
+    category:
+      "org.jboss.resteasy.reactive.client.logging":
+        level: DEBUG
+  smallrye-openapi:
+    info-title: Mikrus API
+    info-version: v1.0
+    info-description: Mikrus API Wrapper standardizing the returned data
+    info-contact-email: pcpiotr@gmail.com
+    info-license-name: The MIT License
+    info-license-url: https://opensource.org/license/mit/
+

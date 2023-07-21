@@ -1,6 +1,6 @@
-package pl.redny
+package pl.redny.mikrus
 
 import io.quarkus.test.junit.QuarkusIntegrationTest
 
 @QuarkusIntegrationTest
-class GreetingResourceIT : GreetingResourceTest()
+class MikrusResourceIT : MikrusResourceTest()
