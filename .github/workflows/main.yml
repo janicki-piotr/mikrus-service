@@ -22,7 +22,7 @@ jobs:
           distribution: 'graalvm' # See 'Options' for all available distributions
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Native Quarkus
-        run: ./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true -DskipTests
+        run: ./gradlew build -Dquarkus.package.type=native -DskipTests
       - name: Change directory
         run: cd build
       - name: copy file via ssh password
