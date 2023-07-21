@@ -1,24 +1,55 @@
-name: Build and Publish Docker Image
-
+name: Generate Docker Image
 on:
+  workflow_dispatch:
   push:
     branches:
-      - master
-
+      - 'master'
+    tags:
+      - 'v*'
 jobs:
-  build-and-publish:
+  build:
+    name: Build Native Quarkus
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name:  Checkout Source Code
+        uses: actions/checkout@v3
         with:
-          java-version: '17'
-
-      - name: Build Quarkus Native Image
-        run: |
-          # Budowanie aplikacji Quarkus Native Image
-          ./mvnw package -Pnative -Dquarkus.native.container-build=true
+          fetch-depth: 0
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          check-latest: true
+      - name: Build Native Quarkus
+        run: ./gradlew build -Dquarkus.package.type=native -DskipTests
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        env:
+          username: ${{ secrets.DOCKER_USERNAME }}
+        if: ${{env.username != ''}}
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: test/my-test
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          context: "."
+          file: './src/main/docker/Dockerfile.native'
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
