@@ -23,8 +23,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Native Quarkus
         run: ./gradlew build -Dquarkus.package.type=native -DskipTests
-      - name: Change directory
-        run: cd build && ls -la
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -32,5 +30,5 @@ jobs:
          username: ${{ secrets.SSH_LOGIN }}
          password: ${{ secrets.SSH_PASSWORD }}
          port: ${{ secrets.SSH_PORT }}
-         source: "mikrus-service-0.1-runner"
+         source: "build/mikrus-service-0.1-runner"
          target: /home/mikrus-service
