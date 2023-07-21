@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build Native Quarkus
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
