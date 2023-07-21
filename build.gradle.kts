@@ -26,6 +26,7 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+    implementation("io.quarkus:quarkus-security-jpa-reactive")
 }
 
 group = "pl.redny"
