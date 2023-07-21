@@ -24,7 +24,7 @@ jobs:
       - name: Build Native Quarkus
         run: ./gradlew build -Dquarkus.package.type=native -DskipTests
       - name: Change directory
-        run: cd build
+        run: cd build && ls -la
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.4
         with:
