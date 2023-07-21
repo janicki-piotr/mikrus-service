@@ -22,20 +22,3 @@ jobs:
         run: |
           # Budowanie aplikacji Quarkus Native Image
           ./mvnw package -Pnative -Dquarkus.native.container-build=true
-
-      - name: Set up Docker
-        uses: docker/setup-docker@v1
-
-      - name: Build Docker Image
-        run: |
-          # Zbuduj obraz Dockerowy
-          docker build -t your-gh-username/your-repo-name:latest .
-
-      - name: Log in to GitHub Container Registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-
-      - name: Push Docker Image to GitHub Container Registry
-        run: |
-          docker tag janicki-piotr/mikrus-service:latest ghcr.io/janicki-piotr/mikrus-service:latest
-          docker push ghcr.io/janicki-piotr/mikrus-service:latest
