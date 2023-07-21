@@ -22,14 +22,8 @@ jobs:
           distribution: 'graalvm' # See 'Options' for all available distributions
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Print GraalVM
-        run: |
-          echo "GRAALVM_HOME: $GRAALVM_HOME"
-          echo "JAVA_HOME: $JAVA_HOME"
-          java --version
-          native-image --version
       - name: Build Native Quarkus
         run: ./gradlew build -Dquarkus.package.type=native -DskipTests
-      - run : cd build && dir
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -37,5 +31,5 @@ jobs:
          username: ${{ secrets.SSH_LOGIN }}
          password: ${{ secrets.SSH_PASSWORD }}
          port: ${{ secrets.SSH_PORT }}
-         source: "test.txt"
+         source: "build/mikrus-service-0.1-runner"
          target: /home
