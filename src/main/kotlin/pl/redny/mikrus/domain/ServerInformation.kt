@@ -16,8 +16,4 @@ data class ServerInformation(
 
 )
 
-@Serializable
-data class Size(
-    val size: Int,
-    val unit: String
-)
+
