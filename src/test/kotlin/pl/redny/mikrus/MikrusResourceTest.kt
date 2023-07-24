@@ -11,7 +11,7 @@ class MikrusResourceTest {
     @Test
     fun testHelloEndpoint() {
         given()
-          .`when`().get("/api/v1/info")
+          .`when`().get("/api/v1/server/info")
           .then()
              .statusCode(500)
     }
