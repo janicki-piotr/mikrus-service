@@ -8,18 +8,11 @@ import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
-import org.eclipse.microprofile.rest.client.inject.RestClient
-import pl.redny.mikrus.client.MikrusApiClient
-import pl.redny.mikrus.client.dto.toLog
-import pl.redny.mikrus.client.dto.toServer
-import pl.redny.mikrus.client.dto.toServerInformation
 import pl.redny.mikrus.domain.Database
+import pl.redny.mikrus.service.MikrusService
 
 @Path("/api/v1")
-class MikrusResource(
-    @RestClient
-    val mikrusApiClient: MikrusApiClient
-) {
+class MikrusResource(val mikrusService: MikrusService) {
 
     @GET
     @Path("/server/info")
@@ -28,8 +21,7 @@ class MikrusResource(
     fun getServerInfo(
         @QueryParam("authToken") authToken: String,
         @QueryParam("serverName") serverName: String
-    ) = mikrusApiClient.getServerInfo(serverName, authToken)
-        .toServerInformation()
+    ) = mikrusService.getServerInfo(authToken, serverName)
 
     @GET
     @Path("/server")
@@ -38,9 +30,25 @@ class MikrusResource(
     fun getServers(
         @QueryParam("authToken") authToken: String,
         @QueryParam("serverName") serverName: String
-    ) = mikrusApiClient.getServers(serverName, authToken)
-        .map { it.toServer() }
-        .toList()
+    ) = mikrusService.getServers(authToken, serverName)
+
+    @GET
+    @Path("/server/stats")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
+    fun getServerStats(
+        @QueryParam("authToken") authToken: String,
+        @QueryParam("serverName") serverName: String
+    ) = mikrusService.getServerStats(authToken, serverName)
+
+    @GET
+    @Path("/server/ports")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
+    fun getServerPorts(
+        @QueryParam("authToken") authToken: String,
+        @QueryParam("serverName") serverName: String
+    ) = mikrusService.getServerPorts(authToken, serverName)
 
     @POST
     @Path("/server/restart")
@@ -49,16 +57,26 @@ class MikrusResource(
     fun restartServer(
         @QueryParam("authToken") authToken: String,
         @QueryParam("serverName") serverName: String
-    ) = mikrusApiClient.restartServer(serverName, authToken)
+    ) = mikrusService.restartServer(authToken, serverName)
 
     @POST
     @Path("/server/amphetamine")
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
-    fun rumAmphetamineMode(
+    fun runAmphetamineMode(
         @QueryParam("authToken") authToken: String,
         @QueryParam("serverName") serverName: String
-    ) = mikrusApiClient.runAmphetamineMode(serverName, authToken)
+    ) = mikrusService.rumAmphetamineMode(authToken, serverName)
+
+    @POST
+    @Path("/server/execute")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
+    fun executeCommandOnServer(
+        @QueryParam("authToken") authToken: String,
+        @QueryParam("serverName") serverName: String,
+        @QueryParam("command") command: String
+    ) = mikrusService.executeCommandOnServer(authToken, serverName, command)
 
     @GET
     @Path("/log")
@@ -67,9 +85,7 @@ class MikrusResource(
     fun getLogs(
         @QueryParam("authToken") authToken: String,
         @QueryParam("serverName") serverName: String
-    ) = mikrusApiClient.getLogs(serverName, authToken)
-        .map { it.toLog() }
-        .toList()
+    ) = mikrusService.getLogs(authToken, serverName)
 
     @GET
     @Path("/log/{logId}")
@@ -79,8 +95,7 @@ class MikrusResource(
         @QueryParam("authToken") authToken: String,
         @QueryParam("serverName") serverName: String,
         @PathParam("logId") logId: String
-    ) = mikrusApiClient.getLog(serverName, authToken, logId)
-        .toLog()
+    ) = mikrusService.getLog(authToken, serverName, logId)
 
     @GET
     @Path("/database")
@@ -89,10 +104,15 @@ class MikrusResource(
     fun getDatabases(
         @QueryParam("authToken") authToken: String,
         @QueryParam("serverName") serverName: String
-    ): List<Database> = mikrusApiClient.getDatabases(serverName, authToken)
-        .entries
-        .stream()
-        .map { Database(it.key, it.value) }
-        .toList()
+    ): List<Database> = mikrusService.getDatabases(authToken, serverName)
+
+    @GET
+    @Path("/cloud")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
+    fun getCloudServices(
+        @QueryParam("authToken") authToken: String,
+        @QueryParam("serverName") serverName: String
+    ) = mikrusService.getCloudServices(authToken, serverName)
 
 }

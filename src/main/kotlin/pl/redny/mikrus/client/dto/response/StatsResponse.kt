@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StatsResponse(
-    val df: String?,
-    val free: String?,
-    val ps: String?,
-    val uptime: String?
+    val df: String,
+    val free: String,
+    val ps: String,
+    val uptime: String
 )
